@@ -66,5 +66,3 @@ class ValidationUtil {
 }
 
 module.exports = ValidationUtil;
-
-// change project admin
