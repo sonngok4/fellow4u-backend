@@ -1,4 +1,5 @@
 // models/booking.model.js
+const database = require("../configs/database");
 class Booking {
 	static async create(bookingData) {
 		const sql = `
@@ -22,6 +23,23 @@ class Booking {
 		try {
 			const [result] = await database.executeQuery(sql, params);
 			return result.insertId;
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	static async findAll() {
+		const sql = `
+			SELECT b.*, t.title as tour_title, t.destination, u.full_name as guide_name, u.avatar as guide_avatar
+			FROM bookings b
+			JOIN tours t ON b.tour_id = t.id
+			JOIN guides g ON t.guide_id = g.id
+			JOIN users u ON g.user_id = u.id
+			ORDER BY b.created_at DESC
+		`;
+		try {
+			const bookings = await database.executeQuery(sql);
+			return bookings;
 		} catch (error) {
 			throw error;
 		}

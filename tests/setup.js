@@ -34,7 +34,9 @@ async function setupTestDatabase() {
 		return testConnection;
 	} catch (error) {
 		console.error('Database setup error:', error);
-		if (connection) await connection.end();
+		if (connection) {
+			await connection.end();
+		}
 		throw error;
 	}
 }
@@ -43,15 +45,18 @@ async function runMigrations(connection) {
 	// Add your migration queries here
 	const migrations = [
 		`CREATE TABLE IF NOT EXISTS users (
-      id INT PRIMARY KEY AUTO_INCREMENT,
-      email VARCHAR(255) UNIQUE NOT NULL,
-      password VARCHAR(255) NOT NULL,
-      full_name VARCHAR(255) NOT NULL,
-      phone_number VARCHAR(20),
-      avatar VARCHAR(255),
-      role ENUM('user', 'admin') DEFAULT 'user',
-      status ENUM('active', 'inactive') DEFAULT 'active',
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20),
+    avatar VARCHAR(255),
+    role ENUM('traveler', 'guide', 'agency', 'admin') NOT NULL,
+    status ENUM('active', 'inactive', 'suspended') NOT NULL,
+    preferred_language VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
     )`,
 		`CREATE TABLE IF NOT EXISTS tours (
       id INT PRIMARY KEY AUTO_INCREMENT,
@@ -80,7 +85,9 @@ async function runMigrations(connection) {
 	}
 }
 async function clearTestDatabase(connection) {
-	if (!connection) return;
+	if (!connection) {
+		return;
+	}
 
 	const tables = [
 		'bookings',

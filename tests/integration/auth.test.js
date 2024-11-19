@@ -30,7 +30,7 @@ describe('Auth Integration Tests', () => {
 			const response = await request(app).post('/api/auth/register').send({
 				email: 'test@example.com',
 				password: 'Password123!',
-				name: 'Test User',
+				full_name: 'Test User',
 			});
 
 			expect(response.status).toBe(201);

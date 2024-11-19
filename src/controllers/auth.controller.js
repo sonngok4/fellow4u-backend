@@ -12,6 +12,8 @@ class AuthController {
 
 			// Check if user already exists
 			const existingUser = await User.findByEmail(email);
+			console.log("Existing user",existingUser);
+			
 			if (existingUser) {
 				console.error('User already exists:', email);
 				throw new ApiError(400, 'Email already registered');
@@ -55,11 +57,56 @@ class AuthController {
 				},
 			});
 		} catch (error) {
-			console.error('Error registering user:', error);
+			if (error.code === 'ER_DUP_ENTRY') {
+				console.error('Email already registered:', error);
+				next(new ApiError(400, 'Email already registered'));
+			} else {
+				console.error('Error registering user:', error);
+				next(error);
+			}
+		}
+	}
+
+	static async forgotPassword(req, res, next) {
+		try {
+			const { email } = req.body;
+
+			// Find user
+			const user = await User.findByEmail(email);
+			if (!user) {
+				throw new ApiError(404, 'User not found');
+			}
+
+			// Generate token
+			const token = jwt.sign({ id: user.id }, env.JWT_SECRET, {
+				expiresIn: env.JWT_RESET_PASSWORD_EXPIRES_IN,
+			});
+
+			// Send email
+			// ...
+
+			res.json({
+				status: 'success',
+				message: 'Password reset link sent to email',
+				data: { token },
+			});
+		} catch (error) {
 			next(error);
 		}
 	}
 
+	static async getMe(req, res, next) {
+		try {
+			res.json({
+				status: 'success',
+				data: {
+					user: req.user,
+				},
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
 	static async login(req, res, next) {
 		try {
 			const { email, password } = req.body;

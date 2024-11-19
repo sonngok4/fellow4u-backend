@@ -1,4 +1,5 @@
 // models/review.model.js
+const database = require("../configs/database");
 class Review {
 	static async create(reviewData) {
 		const sql = `
@@ -27,6 +28,58 @@ class Review {
 		}
 	}
 
+	static async findById(reviewId) {
+		const sql = `
+			SELECT r.*, 
+				   b.user_id as reviewer_id,
+				   u.full_name as reviewer_name,
+				   u.avatar as reviewer_avatar
+			FROM reviews r
+			JOIN bookings b ON r.booking_id = b.id
+			JOIN users u ON b.user_id = u.id
+			WHERE r.id = ?
+		`;
+		try {
+			const [reviews] = await database.executeQuery(sql, [reviewId]);
+			return reviews[0];
+		} catch (error) {
+			throw error;
+		}
+	}
+	static async findByBookingAll(bookingId) {
+		const sql = `
+			SELECT r.*, 
+				   b.user_id as reviewer_id,
+				   u.full_name as reviewer_name,
+				   u.avatar as reviewer_avatar
+			FROM reviews r
+			JOIN bookings b ON r.booking_id = b.id
+			JOIN users u ON b.user_id = u.id
+			WHERE r.booking_id = ?
+		`;
+		try {
+			return database.executeQuery(sql, [bookingId]);
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	static async updateAverageRatings(bookingId) {
+		const sql = `
+			UPDATE bookings
+			SET average_rating = (
+				SELECT AVG(rating)
+				FROM reviews r
+				WHERE r.booking_id = ?
+			)
+		`;
+		try {
+			await database.executeQuery(sql, [bookingId]);
+		} catch (error) {
+			throw error;
+		}
+	}
+
 	static async findByBookingId(bookingId) {
 		const sql = `
             SELECT r.*, 
@@ -41,6 +94,25 @@ class Review {
 		try {
 			const [reviews] = await database.executeQuery(sql, [bookingId]);
 			return reviews[0];
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	static async findByTourAll(tourId) {
+		const sql = `
+			SELECT r.*, 
+				   b.user_id as reviewer_id,
+				   u.full_name as reviewer_name,
+				   u.avatar as reviewer_avatar
+			FROM reviews r
+			JOIN bookings b ON r.booking_id = b.id
+			JOIN tours t ON b.tour_id = t.id
+			JOIN users u ON b.user_id = u.id
+			WHERE t.id = ?
+		`;
+		try {
+			return database.executeQuery(sql, [tourId]);
 		} catch (error) {
 			throw error;
 		}

@@ -1,3 +1,5 @@
+const database = require("../configs/database");
+
 class Guide {
     static async create(guideData) {
         const sql = `
@@ -59,8 +61,10 @@ class Guide {
     }
 
     static async formatGuideData(guide) {
-        if (!guide) return null;
-        
+        if (!guide) {
+            return null;
+        }
+
         try {
             return {
                 ...guide,
@@ -72,6 +76,31 @@ class Guide {
         } catch (error) {
             console.error('Error formatting guide data:', error);
             return guide; // Return original data if parsing fails
+        }
+    }
+
+    static async findAll() {
+        const sql = 'SELECT * FROM guides';
+        try {
+            const guides = await database.executeQuery(sql);
+            // console.log("Guides from database: ", guides);
+
+            // Chuyển đổi định dạng dữ liệu
+            return guides.map(guide => ({
+                id: guide.id,
+                user_id: guide.user_id,
+                description: guide.description,
+                experience_years: guide.experience_years,
+                languages: JSON.parse(guide.languages),
+                specialties: JSON.parse(guide.specialties),
+                price_per_day: parseFloat(guide.price_per_day),
+                availability: guide.availability,
+                rating: parseFloat(guide.rating),
+                created_at: new Date(guide.created_at),
+                updated_at: new Date(guide.updated_at)
+            }));
+        } catch (error) {
+            throw error;
         }
     }
 
@@ -91,11 +120,13 @@ class Guide {
             WHERE g.user_id = ?
             GROUP BY g.id
         `;
-        
+
         try {
             const [guides] = await database.executeQuery(sql, [userId]);
-            if (guides.length === 0) return null;
-            
+            if (guides.length === 0) {
+                return null;
+            }
+
             return this.formatGuideData(guides[0]);
         } catch (error) {
             throw error;
@@ -109,7 +140,7 @@ class Guide {
             SET availability = ?, updated_at = NOW() 
             WHERE id = ?
         `;
-        
+
         try {
             const [result] = await database.executeQuery(sql, [
                 availability.toLowerCase(),
@@ -132,7 +163,7 @@ class Guide {
             SET price_per_day = ?, updated_at = NOW() 
             WHERE id = ?
         `;
-        
+
         try {
             const [result] = await database.executeQuery(sql, [price, guideId]);
             return result.affectedRows > 0;
@@ -154,7 +185,7 @@ class Guide {
             LEFT JOIN reviews r ON g.id = r.guide_id
             WHERE g.availability = 'available'
         `;
-        
+
         const params = [];
 
         if (filters.minPrice) {

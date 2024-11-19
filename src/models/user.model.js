@@ -20,7 +20,7 @@ class User {
 		];
 
 		try {
-			const [result] = await database.executeQuery(sql, params);
+			const result = await database.executeQuery(sql, params);
 			return result.insertId;
 		} catch (error) {
 			throw error;
@@ -30,7 +30,7 @@ class User {
 	static async findAll() {
 		const sql = 'SELECT * FROM users';
 		try {
-			const [users] = await database.executeQuery(sql);
+			const users = await database.executeQuery(sql);
 			return users;
 		} catch (error) {
 			throw error;
@@ -41,7 +41,8 @@ class User {
 		const sql = 'SELECT * FROM users WHERE email = ?';
 		try {
 			const [users] = await database.executeQuery(sql, [email]);
-			return users[0];
+			console.log("find by email", users);
+			return users || null;
 		} catch (error) {
 			throw error;
 		}
@@ -50,8 +51,8 @@ class User {
 	static async findById(id) {
 		const sql = 'SELECT * FROM users WHERE id = ?';
 		try {
-			const [users] = await database.executeQuery(sql, [id]);
-			return users[0];
+			const users = await database.executeQuery(sql, [id]);
+			return users;
 		} catch (error) {
 			throw error;
 		}

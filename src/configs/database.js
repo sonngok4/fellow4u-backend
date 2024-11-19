@@ -1,4 +1,5 @@
 const mysql = require('mysql2');
+const { log } = require('winston');
 require('dotenv').config();
 
 class Database {
@@ -37,6 +38,7 @@ class Database {
 		});
 	}
 
+	
 	async checkConnection() {
 		try {
 			const connection = await this.pool.getConnection();

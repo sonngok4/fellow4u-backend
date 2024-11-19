@@ -50,10 +50,124 @@ class ReviewController {
 		}
 	}
 
-	static async getTourReviews(req, res, next) {
+	static async createReviewForTour(req, res, next) {
+		try {
+			const { tour_id } = req.params;
+			const {
+				rating,
+				service_rating,
+				guide_rating,
+				value_rating,
+				comment,
+			} = req.body;
+
+			const reviewId = await Review.create({
+				booking_id: tour_id,
+				rating,
+				service_rating,
+				guide_rating,
+				value_rating,
+				comment,
+			});
+
+			const review = await Review.findById(reviewId);
+
+			res.status(201).json({
+				status: 'success',
+				data: { review },
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	static async createReviewForBooking(req, res, next) {
+		try {
+			const { booking_id } = req.params;
+			const {
+				rating,
+				service_rating,
+				guide_rating,
+				value_rating,
+				comment,
+			} = req.body;
+
+			const reviewId = await Review.create({
+				booking_id,
+				rating,
+				service_rating,
+				guide_rating,
+				value_rating,
+				comment,
+			});
+
+			const review = await Review.findById(reviewId);
+
+			res.status(201).json({
+				status: 'success',
+				data: { review },
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	static async getReviewById(req, res, next) {
+		try {
+			const { id } = req.params;
+			const review = await Review.findById(id);
+
+			res.json({
+				status: 'success',
+				data: { review },
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	static async getReviewsForGuide(req, res, next) {
+		try {
+			const { guide_id } = req.params;
+			const reviews = await Review.findByGuideId(guide_id);
+
+			res.json({
+				status: 'success',
+				data: {
+					reviews,
+					total: reviews.length,
+					average_rating:
+						reviews.reduce((acc, rev) => acc + rev.rating, 0) / reviews.length,
+				},
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	static async getReviewsForTour(req, res, next) {
 		try {
 			const { tour_id } = req.params;
 			const reviews = await Review.findByTourId(tour_id);
+
+			res.json({
+				status: 'success',
+				data: {
+					reviews,
+					total: reviews.length,
+					average_rating:
+						reviews.reduce((acc, rev) => acc + rev.rating, 0) / reviews.length,
+				},
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	static async getReviewsForBooking(req, res, next) {
+		try {
+			const { booking_id } = req.params;
+			const reviews = await Review.findByBookingId(booking_id);
 
 			res.json({
 				status: 'success',

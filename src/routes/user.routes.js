@@ -7,6 +7,7 @@ const { validateUserUpdate } = require('../middlewares/validation.middleware');
 
 // User routes
 router.get('/', userController.getAllUsers);
+router.get('/:id', userController.getUserById);
 router.get('/profile', authMiddleware, userController.getProfile);
 router.put(
 	'/profile',

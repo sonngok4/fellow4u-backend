@@ -34,6 +34,8 @@ router.put(
 	guideController.updateGuideProfile,
 );
 
+router.get('/', guideController.getAllGuides);
+
 router.get(
 	'/tours',
 	authMiddleware,

@@ -1,6 +1,7 @@
 // controllers/tour.controller.js
 const Tour= require('../models/tour.model');
 const Guide = require('../models/guide.model');
+const {ApiError} = require('../utils/api-error');
 
 class TourController {
 	static async createTour(req, res, next) {
@@ -43,9 +44,12 @@ class TourController {
 	static async getAllTours(req, res, next) {
 		try {
 			const tours = await Tour.findAll();
+			if (!tours) {
+				throw new ApiError(404, 'Tours not found');
+			}
 			res.json({
 				status: 'success',
-				data: { tours },
+				data: { tours: tours.length > 0 ? tours : ["not tours"] , total: tours.length},
 			});
 		} catch (error) {
 			next(error);

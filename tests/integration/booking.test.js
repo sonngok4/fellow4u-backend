@@ -19,7 +19,7 @@ describe('Booking Integration Tests', () => {
 			const [
 				userResult,
 			] = await connection.query(
-				'INSERT INTO users (email, password, name) VALUES (?, ?, ?)',
+				'INSERT INTO users (email, password, full_name) VALUES (?, ?, ?)',
 				[
 					'test@example.com',
 					await PasswordUtil.hashPassword('Password123!'),

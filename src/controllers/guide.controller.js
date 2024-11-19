@@ -229,7 +229,7 @@ class GuideController {
 			const guides = await Guide.findAll();
 			res.json({
 				status: 'success',
-				data: { guides },
+				data: { guides, total: guides.length },
 			});
 		} catch (error) {
 			next(error);

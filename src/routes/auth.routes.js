@@ -8,6 +8,7 @@ const {
 } = require('../middlewares/validation.middleware');
 
 // Authentication routes
+router.get('/me', authController.getMe);
 router.post('/register', validateRegistration, authController.register);
 router.post('/login', validateLogin, authController.login);
 router.post('/logout', authController.logout);

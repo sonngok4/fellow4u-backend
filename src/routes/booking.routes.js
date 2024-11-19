@@ -9,8 +9,9 @@ const {
 const { validateBooking } = require('../middlewares/validation.middleware');
 
 // Booking routes for users
+router.get("/", bookingController.getAllBookings);
 router.post(
-	'/',
+	'/new',
 	authMiddleware,
 	validateBooking,
 	bookingController.createBooking,
