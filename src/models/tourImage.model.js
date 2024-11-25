@@ -9,7 +9,7 @@ class TourImage {
     }
 
     // static async create(id, tourId, url) {
-    //     const sql = 'INSERT INTO tour_images (id, tour_id, image_url) VALUES (?, ?, ?)';
+    //     const sql = 'INSERT INTO TourImages (id, tour_id, image_url) VALUES (?, ?, ?)';
     //     try {
     //         await database.executeQuery(sql, [id,tourId, url]);
     //     } catch (error) {
@@ -18,7 +18,7 @@ class TourImage {
     // }
 
     static async insert(image) {
-        const sql = 'INSERT INTO tour_images (tour_id, image_url) VALUES (?, ?)';
+        const sql = 'INSERT INTO TourImages (tour_id, image_url) VALUES (?, ?)';
         try {
             await database.executeQuery(sql, [image.tourId, image.url]);
         } catch (error) {
@@ -32,7 +32,7 @@ class TourImage {
         const placeholders = images.map(() => '(?, ?)').join(', ');
         const values = images.flatMap(image => [image.tourId, image.url]);
 
-        const sql = `INSERT INTO tour_images (tour_id, image_url) VALUES ${placeholders}`;
+        const sql = `INSERT INTO TourImages (tour_id, image_url) VALUES ${placeholders}`;
 
         try {
             await database.executeQuery(sql, values);
@@ -42,7 +42,7 @@ class TourImage {
     }
 
     static async findByTourId(tourId) {
-        const sql = 'SELECT * FROM tour_images WHERE tour_id = ?';
+        const sql = 'SELECT * FROM TourImages WHERE tour_id = ?';
         try {
             const [images] = await database.executeQuery(sql, [tourId]);
             return images;
@@ -52,7 +52,7 @@ class TourImage {
     }
 
     static async deleteByTourId(tourId) {
-        const sql = 'DELETE FROM tour_images WHERE tour_id = ?';
+        const sql = 'DELETE FROM TourImages WHERE tour_id = ?'; 
         try {
             await database.executeQuery(sql, [tourId]);
         } catch (error) {
@@ -61,7 +61,7 @@ class TourImage {
     }
 
     static async save(url, tourId) {
-        const sql = 'INSERT INTO tour_images (tour_id, image_url) VALUES (?, ?)';
+        const sql = 'INSERT INTO TourImages (tour_id, image_url) VALUES (?, ?)';
         try {
             await database.executeQuery(sql, [tourId, url]);
         } catch (error) {

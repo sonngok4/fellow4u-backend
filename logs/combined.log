@@ -236,3 +236,8 @@
 {"level":"info","message":{"ip":"::1","method":"POST","path":"/api/upload/upload-multiple","timestamp":"2024-11-13T06:19:35.940Z"},"service":"fellow4u-backend","timestamp":"2024-11-13 13:19:35"}
 {"level":"info","message":{"ip":"::1","method":"POST","path":"/api/upload/upload-single","timestamp":"2024-11-13T06:21:45.021Z"},"service":"fellow4u-backend","timestamp":"2024-11-13 13:21:45"}
 {"level":"info","message":{"ip":"::1","method":"POST","path":"/api/upload/upload-single","timestamp":"2024-11-13T06:23:19.649Z"},"service":"fellow4u-backend","timestamp":"2024-11-13 13:23:19"}
+{"level":"info","message":{"ip":"::1","method":"POST","path":"/api/tours","timestamp":"2024-11-20T10:16:24.519Z"},"service":"fellow4u-backend","timestamp":"2024-11-20 17:16:24"}
+{"level":"info","message":{"ip":"::1","method":"POST","path":"/api/upload/upload-multiple","timestamp":"2024-11-20T10:17:09.213Z"},"service":"fellow4u-backend","timestamp":"2024-11-20 17:17:09"}
+{"level":"info","message":{"ip":"::1","method":"POST","path":"/api/upload/upload-multiple","timestamp":"2024-11-20T10:23:25.547Z"},"service":"fellow4u-backend","timestamp":"2024-11-20 17:23:25"}
+{"level":"info","message":{"ip":"::1","method":"POST","path":"/api/tours","timestamp":"2024-11-20T10:48:22.667Z"},"service":"fellow4u-backend","timestamp":"2024-11-20 17:48:22"}
+{"level":"info","message":{"ip":"::1","method":"POST","path":"/api/upload/upload-multiple","timestamp":"2024-11-20T10:48:26.371Z"},"service":"fellow4u-backend","timestamp":"2024-11-20 17:48:26"}
