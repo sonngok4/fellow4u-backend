@@ -3,7 +3,7 @@ const database = require("../configs/database");
 class Review {
 	static async create(reviewData) {
 		const sql = `
-            INSERT INTO reviews (
+            INSERT INTO Reviews (
                 booking_id, rating, comment, 
                 service_rating, guide_rating, value_rating,
                 created_at
@@ -34,9 +34,9 @@ class Review {
 				   b.user_id as reviewer_id,
 				   u.full_name as reviewer_name,
 				   u.avatar as reviewer_avatar
-			FROM reviews r
-			JOIN bookings b ON r.booking_id = b.id
-			JOIN users u ON b.user_id = u.id
+			FROM Reviews r
+			JOIN Bookings b ON r.booking_id = b.id
+			JOIN Users u ON b.user_id = u.id
 			WHERE r.id = ?
 		`;
 		try {
@@ -52,9 +52,9 @@ class Review {
 				   b.user_id as reviewer_id,
 				   u.full_name as reviewer_name,
 				   u.avatar as reviewer_avatar
-			FROM reviews r
-			JOIN bookings b ON r.booking_id = b.id
-			JOIN users u ON b.user_id = u.id
+			FROM Reviews r
+			JOIN Bookings b ON r.booking_id = b.id
+			JOIN Users u ON b.user_id = u.id
 			WHERE r.booking_id = ?
 		`;
 		try {
@@ -66,10 +66,10 @@ class Review {
 
 	static async updateAverageRatings(bookingId) {
 		const sql = `
-			UPDATE bookings
+			UPDATE Bookings
 			SET average_rating = (
 				SELECT AVG(rating)
-				FROM reviews r
+				FROM Reviews r
 				WHERE r.booking_id = ?
 			)
 		`;
@@ -86,9 +86,9 @@ class Review {
                    b.user_id as reviewer_id,
                    u.full_name as reviewer_name,
                    u.avatar as reviewer_avatar
-            FROM reviews r
-            JOIN bookings b ON r.booking_id = b.id
-            JOIN users u ON b.user_id = u.id
+            FROM Reviews r
+            JOIN Bookings b ON r.booking_id = b.id
+            JOIN Users u ON b.user_id = u.id
             WHERE r.booking_id = ?
         `;
 		try {
@@ -105,10 +105,10 @@ class Review {
 				   b.user_id as reviewer_id,
 				   u.full_name as reviewer_name,
 				   u.avatar as reviewer_avatar
-			FROM reviews r
-			JOIN bookings b ON r.booking_id = b.id
-			JOIN tours t ON b.tour_id = t.id
-			JOIN users u ON b.user_id = u.id
+			FROM Reviews r
+			JOIN Bookings b ON r.booking_id = b.id
+			JOIN Tours t ON b.tour_id = t.id
+			JOIN Users u ON b.user_id = u.id
 			WHERE t.id = ?
 		`;
 		try {
@@ -125,9 +125,9 @@ class Review {
                    u.full_name as reviewer_name,
                    u.avatar as reviewer_avatar,
                    b.tour_id
-            FROM reviews r
-            JOIN bookings b ON r.booking_id = b.id
-            JOIN users u ON b.user_id = u.id
+            FROM Reviews r
+            JOIN Bookings b ON r.booking_id = b.id
+            JOIN Users u ON b.user_id = u.id
             WHERE b.tour_id = ?
             ORDER BY r.created_at DESC
         `;
@@ -146,10 +146,10 @@ class Review {
                    u.full_name as reviewer_name,
                    u.avatar as reviewer_avatar,
                    t.title as tour_name
-            FROM reviews r
-            JOIN bookings b ON r.booking_id = b.id
-            JOIN tours t ON b.tour_id = t.id
-            JOIN users u ON b.user_id = u.id
+            FROM Reviews r
+            JOIN Bookings b ON r.booking_id = b.id
+            JOIN Tours t ON b.tour_id = t.id
+            JOIN Users u ON b.user_id = u.id
             WHERE t.guide_id = ?
             ORDER BY r.created_at DESC
         `;
@@ -164,14 +164,14 @@ class Review {
 	static async updateAverageRatings(bookingId) {
 		const updateGuideRating = `
             UPDATE guides g
-            JOIN tours t ON g.id = t.guide_id
-            JOIN bookings b ON t.id = b.tour_id
-            JOIN reviews r ON b.id = r.booking_id
+            JOIN Tours t ON g.id = t.guide_id
+            JOIN Bookings b ON t.id = b.tour_id
+            JOIN Reviews r ON b.id = r.booking_id
             SET g.rating = (
                 SELECT AVG(rating)
-                FROM reviews r2
-                JOIN bookings b2 ON r2.booking_id = b2.id
-                JOIN tours t2 ON b2.tour_id = t2.id
+                FROM Reviews r2
+                JOIN Bookings b2 ON r2.booking_id = b2.id
+                JOIN Tours t2 ON b2.tour_id = t2.id
                 WHERE t2.guide_id = g.id
             )
             WHERE b.id = ?

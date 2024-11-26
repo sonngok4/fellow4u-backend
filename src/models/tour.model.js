@@ -3,7 +3,7 @@ const database = require('../configs/database');
 class Tour {
 	static async create(tourData) {
 		const sql = `
-    INSERT INTO tours (
+    INSERT INTO Tours (
       guide_id, title, description, destination,
       duration_days, max_participants, price_per_person,
       included_services, excluded_services, status,
@@ -30,7 +30,7 @@ class Tour {
 			// Thêm ảnh của tour
 			if (tourData.images && tourData.images.length > 0) {
 				const imagesSql = `
-        INSERT INTO tour_images (tour_id, image_url)
+        INSERT INTO TourImages (tour_id, image_url)
         VALUES ?
       `;
 				const imagesParams = tourData.images.map(imageUrl => [tourId, imageUrl]);
@@ -45,7 +45,7 @@ class Tour {
 
 	static async update(id, tourData) {
 		const sql = `
-    UPDATE tours
+    UPDATE Tours
     SET title = ?, description = ?, destination = ?, duration_days = ?, 
     max_participants = ?, price_per_person = ?, included_services = ?, 
     excluded_services = ?, status = ?, updated_at = NOW()
@@ -68,10 +68,10 @@ class Tour {
 			const [result] = await database.executeQuery(sql, params);
 
 			// Xóa các ảnh cũ và thêm ảnh mới
-			await database.executeQuery(`DELETE FROM tour_images WHERE tour_id = ?`, [id]);
+			await database.executeQuery(`DELETE FROM TourImages WHERE tour_id = ?`, [id]);
 			if (tourData.images && tourData.images.length > 0) {
 				const imagesSql = `
-        INSERT INTO tour_images (tour_id, image_url)
+        INSERT INTO TourImages (tour_id, image_url)
         VALUES ?
       `;
 				const imagesParams = tourData.images.map(imageUrl => [id, imageUrl]);
@@ -92,10 +92,10 @@ class Tour {
       u.full_name as guide_name, 
       u.avatar as guide_avatar,
       JSON_ARRAYAGG(i.image_url) as images
-    FROM tours t
-    JOIN guides g ON t.guide_id = g.id
-    JOIN users u ON g.user_id = u.id
-    LEFT JOIN tour_images i ON t.id = i.tour_id
+    FROM Tours t
+    JOIN Guides g ON t.guide_id = g.id
+    JOIN Users u ON g.user_id = u.id
+    LEFT JOIN TourImages i ON t.id = i.tour_id
     GROUP BY t.id
   `;
 		try {
@@ -119,10 +119,10 @@ class Tour {
       u.full_name as guide_name, 
       u.avatar as guide_avatar,
       JSON_ARRAYAGG(i.image_url) as images
-    FROM tours t
-    JOIN guides g ON t.guide_id = g.id
-    JOIN users u ON g.user_id = u.id
-    LEFT JOIN tour_images i ON t.id = i.tour_id
+    FROM Tours t
+    JOIN Guides g ON t.guide_id = g.id
+    JOIN Users u ON g.user_id = u.id
+    LEFT JOIN TourImages i ON t.id = i.tour_id
     WHERE t.id = ?
     GROUP BY t.id
   `;

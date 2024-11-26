@@ -4,7 +4,7 @@ const database = require('../configs/database');
 class User {
 	static async create(userData) {
 		const sql = `
-            INSERT INTO users (
+            INSERT INTO Users (
                 email, password, full_name, phone_number, 
                 avatar, role, status, created_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
@@ -28,7 +28,7 @@ class User {
 	}
 
 	static async findAll() {
-		const sql = 'SELECT * FROM users';
+		const sql = 'SELECT * FROM Users';
 		try {
 			const users = await database.executeQuery(sql);
 			return users;
@@ -38,7 +38,7 @@ class User {
 	}
 
 	static async findByEmail(email) {
-		const sql = 'SELECT * FROM users WHERE email = ?';
+		const sql = 'SELECT * FROM Users WHERE email = ?';
 		try {
 			const [users] = await database.executeQuery(sql, [email]);
 			console.log("find by email", users);
@@ -49,7 +49,7 @@ class User {
 	}
 
 	static async findById(id) {
-		const sql = 'SELECT * FROM users WHERE id = ?';
+		const sql = 'SELECT * FROM Users WHERE id = ?';
 		try {
 			const users = await database.executeQuery(sql, [id]);
 			return users;

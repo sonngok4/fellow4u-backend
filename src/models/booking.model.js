@@ -3,7 +3,7 @@ const database = require("../configs/database");
 class Booking {
 	static async create(bookingData) {
 		const sql = `
-            INSERT INTO bookings (
+            INSERT INTO Bookings (
                 user_id, tour_id, start_date, end_date,
                 number_of_people, total_price, status,
                 payment_status, created_at
@@ -31,10 +31,10 @@ class Booking {
 	static async findAll() {
 		const sql = `
 			SELECT b.*, t.title as tour_title, t.destination, u.full_name as guide_name, u.avatar as guide_avatar
-			FROM bookings b
-			JOIN tours t ON b.tour_id = t.id
-			JOIN guides g ON t.guide_id = g.id
-			JOIN users u ON g.user_id = u.id
+			FROM Bookings b
+			JOIN Tours t ON b.tour_id = t.id
+			JOIN Guides g ON t.guide_id = g.id
+			JOIN Users u ON g.user_id = u.id
 			ORDER BY b.created_at DESC
 		`;
 		try {
@@ -48,10 +48,10 @@ class Booking {
 	static async findByUserId(userId) {
 		const sql = `
             SELECT b.*, t.title as tour_title, t.destination, u.full_name as guide_name, u.avatar as guide_avatar
-            FROM bookings b
-            JOIN tours t ON b.tour_id = t.id
-            JOIN guides g ON t.guide_id = g.id
-            JOIN users u ON g.user_id = u.id
+            FROM Bookings b
+            JOIN Tours t ON b.tour_id = t.id
+            JOIN Guides g ON t.guide_id = g.id
+            JOIN Users u ON g.user_id = u.id
             WHERE b.user_id = ?
             ORDER BY b.created_at DESC
         `;

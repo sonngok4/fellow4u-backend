@@ -3,7 +3,7 @@ const database = require("../configs/database");
 class Guide {
     static async create(guideData) {
         const sql = `
-            INSERT INTO guides (
+            INSERT INTO Guides (
                 user_id, description, experience_years, 
                 languages, specialties, price_per_day,
                 availability, created_at
@@ -80,7 +80,7 @@ class Guide {
     }
 
     static async findAll() {
-        const sql = 'SELECT * FROM guides';
+        const sql = 'SELECT * FROM Guides';
         try {
             const guides = await database.executeQuery(sql);
             // console.log("Guides from database: ", guides);
@@ -114,9 +114,9 @@ class Guide {
                 u.avatar,
                 COALESCE(AVG(r.rating), 0) as average_rating,
                 COUNT(r.id) as review_count
-            FROM guides g
-            JOIN users u ON g.user_id = u.id
-            LEFT JOIN reviews r ON g.id = r.guide_id
+            FROM Guides g
+            JOIN Users u ON g.user_id = u.id
+            LEFT JOIN Reviews r ON g.id = r.guide_id
             WHERE g.user_id = ?
             GROUP BY g.id
         `;
@@ -136,7 +136,7 @@ class Guide {
     // Additional useful methods
     static async updateAvailability(guideId, availability) {
         const sql = `
-            UPDATE guides 
+            UPDATE Guides 
             SET availability = ?, updated_at = NOW() 
             WHERE id = ?
         `;
@@ -159,7 +159,7 @@ class Guide {
         }
 
         const sql = `
-            UPDATE guides 
+            UPDATE Guides 
             SET price_per_day = ?, updated_at = NOW() 
             WHERE id = ?
         `;
@@ -180,9 +180,9 @@ class Guide {
                 u.avatar,
                 COALESCE(AVG(r.rating), 0) as average_rating,
                 COUNT(r.id) as review_count
-            FROM guides g
-            JOIN users u ON g.user_id = u.id
-            LEFT JOIN reviews r ON g.id = r.guide_id
+            FROM Guides g
+            JOIN Users u ON g.user_id = u.id
+            LEFT JOIN Reviews r ON g.id = r.guide_id
             WHERE g.availability = 'available'
         `;
 

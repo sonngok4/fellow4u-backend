@@ -3,7 +3,7 @@ const database = require("../configs/database");
 class Agency {
 	static async create(agencyData) {
 		const sql = `
-            INSERT INTO agencies (
+            INSERT INTO Agencies (
                 user_id, company_name, license_number, description,
                 address, website, employee_count, established_year,
                 specialties, service_areas, created_at
@@ -33,8 +33,8 @@ class Agency {
 	static async findAll() {
 		const sql = `
 			SELECT a.*, u.email, u.phone_number, u.avatar
-			FROM agencies a
-			JOIN users u ON a.user_id = u.id
+			FROM Agencies a
+			JOIN Users u ON a.user_id = u.id
 		`;
 		try {
 			const agencies = await database.executeQuery(sql);
@@ -51,8 +51,8 @@ class Agency {
 	static async findById(id) {
 		const sql = `
             SELECT a.*, u.email, u.phone_number, u.avatar
-            FROM agencies a
-            JOIN users u ON a.user_id = u.id
+            FROM Agencies a
+            JOIN Users u ON a.user_id = u.id
             WHERE a.id = ?
         `;
 		try {
@@ -66,8 +66,8 @@ class Agency {
 	static async findByUserId(userId) {
 		const sql = `
             SELECT a.*, u.email, u.phone_number, u.avatar
-            FROM agencies a
-            JOIN users u ON a.user_id = u.id
+            FROM Agencies a
+            JOIN Users u ON a.user_id = u.id
             WHERE a.user_id = ?
         `;
 		try {
@@ -80,7 +80,7 @@ class Agency {
 
 	static async update(id, agencyData) {
 		const sql = `
-            UPDATE agencies
+            UPDATE Agencies
             SET 
                 company_name = ?,
                 license_number = ?,
