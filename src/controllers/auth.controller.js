@@ -4,17 +4,22 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 const env = require('../configs/environment');
 const { ApiError } = require('../utils/api-error');
+const Agency = require('../models/agency.model');
+const Guide = require('../models/guide.model');
 
 class AuthController {
 	static async register(req, res, next) {
 		try {
 			const { email, password, full_name, phone_number, role } = req.body;
 
-			// Check if user already exists
+			// More explicit check for existing user
 			const existingUser = await User.findByEmail(email);
-			console.log("Existing user",existingUser);
-			
-			if (existingUser) {
+			console.log("Existing user:", existingUser);
+			console.log("Existing user type:", typeof existingUser);
+			console.log("Existing user length:", Array.isArray(existingUser) ? existingUser.length : 'not an array');
+
+			// Modify the existence check
+			if (existingUser && (Array.isArray(existingUser) ? existingUser.length > 0 : existingUser)) {
 				console.error('User already exists:', email);
 				throw new ApiError(400, 'Email already registered');
 			}
@@ -31,7 +36,12 @@ class AuthController {
 				role: role || 'user',
 			});
 
+			console.log("User ID:", userId);
+
+
 			const user = await User.findById(userId);
+
+			console.log("user", user);
 
 			// Generate token
 			const token = jwt.sign(
@@ -109,12 +119,29 @@ class AuthController {
 	}
 	static async login(req, res, next) {
 		try {
-			const { email, password } = req.body;
+			const { email, password } = req.body
+
+			// Validate input
+			if (!email || !password) {
+				throw new ApiError(400, 'Email and password are required');
+			}
+
+			console.log('Login attempt:', {
+				email,
+				passwordProvided: !!password, // log whether password exists
+				passwordLength: password ? password.length : 'N/A'
+			});
 
 			// Find user
 			const user = await User.findByEmail(email);
 			if (!user) {
 				throw new ApiError(401, 'Invalid credentials');
+			}
+
+			// Additional validation
+			if (!user.password) {
+				console.error('User found but no password stored');
+				throw new ApiError(401, 'Account authentication error');
 			}
 
 			// Check password
@@ -123,9 +150,27 @@ class AuthController {
 				throw new ApiError(401, 'Invalid credentials');
 			}
 
+			// Lấy agency_id nếu user là agency
+			let agency_id = null;
+			if (user.role === 'agency') {
+				const agency = await Agency.findByUserId(user.id);  // Lấy thông tin agency từ bảng agencies	
+				if (agency) {
+					agency_id = agency.id; // Lưu agency_id vào biến nếu user có agency
+				}
+			}
+
+			// Lấy guides_id nếu user là guide
+			let guide_id = null;
+			if (user.role === 'guide') {
+				const guide = await Guide.findByUserId(user.id);  // Lấy thông tin guide từ bảng guides
+				if (guide) {
+					guide_id = guide.id; // Lưu guides_id vào biến nếu user có guide
+				}
+			}
+
 			// Generate token
 			const token = jwt.sign(
-				{ id: user.id, email: user.email, role: user.role },
+				{ id: user.id, email: user.email, role: user.role, agency_id, guide_id },
 				env.JWT_SECRET,
 				{ expiresIn: env.JWT_EXPIRES_IN },
 			);

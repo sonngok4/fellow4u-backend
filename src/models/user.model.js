@@ -6,7 +6,7 @@ class User {
 		const sql = `
             INSERT INTO Users (
                 email, password, full_name, phone_number, 
-                avatar, role, status, created_at
+                avatar, role, status,	 created_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
         `;
 		const params = [
@@ -21,6 +21,7 @@ class User {
 
 		try {
 			const result = await database.executeQuery(sql, params);
+			console.log("result", result.insertId);
 			return result.insertId;
 		} catch (error) {
 			throw error;
@@ -51,7 +52,7 @@ class User {
 	static async findById(id) {
 		const sql = 'SELECT * FROM Users WHERE id = ?';
 		try {
-			const users = await database.executeQuery(sql, [id]);
+			const [users] = await database.executeQuery(sql, [id]);
 			return users;
 		} catch (error) {
 			throw error;

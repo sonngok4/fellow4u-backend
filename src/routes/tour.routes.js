@@ -30,6 +30,9 @@ router.delete(
 	tourController.deleteTour,
 );
 
+router.post('/add', authMiddleware, tourController.createTour);
+
+
 // Public tour routes
 router.get('/', tourController.getAllTours);
 router.get('/search', tourController.searchTours);

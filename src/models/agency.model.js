@@ -57,7 +57,7 @@ class Agency {
         `;
 		try {
 			const [agencies] = await database.executeQuery(sql, [id]);
-			return agencies[0];
+			return agencies;
 		} catch (error) {
 			throw error;
 		}
@@ -72,7 +72,7 @@ class Agency {
         `;
 		try {
 			const [agencies] = await database.executeQuery(sql, [userId]);
-			return agencies[0];
+			return agencies;
 		} catch (error) {
 			throw error;
 		}

@@ -12,8 +12,7 @@ class ApiError extends Error {
    * @param {boolean} [isOperational=true] - Whether the error is operational or programming
    * @param {string} [stack] - Error stack trace
    */
-	
-	
+
 	constructor(
 		statusCode,
 		message,

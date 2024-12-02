@@ -4,7 +4,7 @@ class Guide {
     static async create(guideData) {
         const sql = `
             INSERT INTO Guides (
-                user_id, description, experience_years, 
+                user_id,address,city,country, description, experience_years, 
                 languages, specialties, price_per_day,
                 availability, created_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
@@ -81,42 +81,75 @@ class Guide {
 
     static async findAll() {
         const sql = 'SELECT * FROM Guides';
+        const sqlUsers = 'SELECT * FROM Users WHERE id IN (SELECT user_id FROM Guides)';
         try {
             const guides = await database.executeQuery(sql);
-            // console.log("Guides from database: ", guides);
+            const users = await database.executeQuery(sqlUsers);
 
-            // Chuyển đổi định dạng dữ liệu
-            return guides.map(guide => ({
-                id: guide.id,
-                user_id: guide.user_id,
-                description: guide.description,
-                experience_years: guide.experience_years,
-                languages: JSON.parse(guide.languages),
-                specialties: JSON.parse(guide.specialties),
-                price_per_day: parseFloat(guide.price_per_day),
-                availability: guide.availability,
-                rating: parseFloat(guide.rating),
-                created_at: new Date(guide.created_at),
-                updated_at: new Date(guide.updated_at)
-            }));
+            return guides.map(guide => {
+                // Tìm user tương ứng với guide
+                const user = users.find(u => u.id === guide.user_id);
+
+                // Tạo đối tượng kết hợp, loại bỏ các trường trùng lặp
+                return {
+                    // Các trường của guide
+                    id: guide.id,
+                    user_id: guide.user_id,
+
+                    // Các trường của user, loại trừ id, created_at, updated_at
+                    email: user.email,
+                    full_name: user.full_name,
+                    phone_number: user.phone_number,
+                    avatar: user.avatar,
+                    role: user.role,
+                    status: user.status,
+                    preferred_language: user.preferred_language,
+
+
+                    address: guide.address,
+                    city: guide.city,
+                    country: guide.country,
+                    description: guide.description,
+                    experience_years: guide.experience_years,
+                    languages: JSON.parse(guide.languages),
+                    specialties: JSON.parse(guide.specialties),
+                    price_per_day: parseFloat(guide.price_per_day),
+                    availability: guide.availability,
+                    rating: parseFloat(guide.rating),
+                    created_at: new Date(guide.created_at),
+                    updated_at: new Date(guide.updated_at),
+                };
+            });
         } catch (error) {
             throw error;
         }
     }
 
     static async findByUserId(userId) {
+        // const sql = `
+        //     SELECT 
+        //         g.*,
+        //         u.full_name,
+        //         u.email,
+        //         u.phone_number,
+        //         u.avatar,
+        //         COALESCE(AVG(r.rating), 0) as average_rating,
+        //         COUNT(r.id) as review_count
+        //     FROM Guides g
+        //     JOIN Users u ON g.user_id = u.id
+        //     LEFT JOIN Reviews r ON g.id = r.guide_id
+        //     WHERE g.user_id = ?
+        //     GROUP BY g.id
+        // `;
         const sql = `
             SELECT 
                 g.*,
                 u.full_name,
                 u.email,
                 u.phone_number,
-                u.avatar,
-                COALESCE(AVG(r.rating), 0) as average_rating,
-                COUNT(r.id) as review_count
+                u.avatar
             FROM Guides g
             JOIN Users u ON g.user_id = u.id
-            LEFT JOIN Reviews r ON g.id = r.guide_id
             WHERE g.user_id = ?
             GROUP BY g.id
         `;
@@ -127,7 +160,7 @@ class Guide {
                 return null;
             }
 
-            return this.formatGuideData(guides[0]);
+            return this.formatGuideData(guides);
         } catch (error) {
             throw error;
         }

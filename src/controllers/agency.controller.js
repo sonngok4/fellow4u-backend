@@ -91,19 +91,19 @@ class AgencyController {
 		} catch (error) {
 			next(error);
 		}
-    }
-    
-    static async getAllAgencies(req, res, next) {
-        try {
-            const agencies = await Agency.findAll();
-            res.json({
-                status: 'success',
-                data: { agencies },
-            });
-        } catch (error) {
-            next(error);
-        }
-    }
+	}
+
+	static async getAllAgencies(req, res, next) {
+		try {
+			const agencies = await Agency.findAll();
+			res.json({
+				status: 'success',
+				data: { agencies },
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
 
 	static async getAgency(req, res, next) {
 		try {
@@ -119,23 +119,30 @@ class AgencyController {
 		} catch (error) {
 			next(error);
 		}
-    }
-    
-    static async getAgencyById(req, res, next) {
-        try {
-            const { id } = req.params;
-            const agency = await Agency.findById(id);
-            if (!agency) {
-                throw new ApiError(404, 'Agency not found');
-            }
-            res.json({
-                status: 'success',
-                data: { agency },
-            });
-        } catch (error) {
-            next(error);
-        }
-    }
+	}
+
+	static async getAgencyById(req, res, next) {
+		try {
+			const { id } = req.params;
+			const agency = await Agency.findById(id);
+			if (!agency) {
+				throw new ApiError(404, 'Agency not found');
+			}
+			res.json({
+				status: 'success',
+				data: {
+					...agency,
+					specialties: JSON.parse(agency.specialties),
+					service_areas: JSON.parse(agency.service_areas),
+					insurance_info: JSON.parse(agency.insurance_info),
+					bank_account_info: JSON.parse(agency.bank_account_info),
+					support_hours: JSON.parse(agency.support_hours),
+				},
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
 
 	static async getAgencyProfile(req, res, next) {
 		try {
@@ -151,39 +158,39 @@ class AgencyController {
 		} catch (error) {
 			next(error);
 		}
-    }
-    
-    static async getPublicAgencyGuides(req, res, next) {
-        try {
-            const { id } = req.params;
-            const agency = await Agency.findById(id);
-            if (!agency) {
-                throw new ApiError(404, 'Agency not found');
-            }
-            res.json({
-                status: 'success',
-                data: { guides: agency.guides },
-            });
-        } catch (error) {
-            next(error);
-        }
-    }
+	}
 
-    static async getAgencyTours(req, res, next) {
-        try {
-            const { id } = req.params;
-            const agency = await Agency.findById(id);
-            if (!agency) {
-                throw new ApiError(404, 'Agency not found');
-            }
-            res.json({
-                status: 'success',
-                data: { tours: agency.tours },
-            });
-        } catch (error) {
-            next(error);
-        }
-    }
+	static async getPublicAgencyGuides(req, res, next) {
+		try {
+			const { id } = req.params;
+			const agency = await Agency.findById(id);
+			if (!agency) {
+				throw new ApiError(404, 'Agency not found');
+			}
+			res.json({
+				status: 'success',
+				data: { guides: agency.guides },
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	static async getAgencyTours(req, res, next) {
+		try {
+			const { id } = req.params;
+			const agency = await Agency.findById(id);
+			if (!agency) {
+				throw new ApiError(404, 'Agency not found');
+			}
+			res.json({
+				status: 'success',
+				data: { tours: agency.tours },
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
 
 	static async updateAgency(req, res, next) {
 		try {

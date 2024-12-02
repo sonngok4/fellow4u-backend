@@ -33,16 +33,35 @@ const guideProfileSchema = Joi.object({
 		.default('available'),
 });
 
+// tour_name,
+// 	country_id,
+// 	city_id,
+// 	service_id,
+// 	itinerary,
+// 	duration,
+// 	department_date,
+// 	department_place,
+// 	public_id,
+// 	cover_photo,
+// 	description,
+// 	price_adult,
+// 	price_child,
+// 	price_baby,
+// 	status,
+// 	created_at
 // Tour validation schemas
 const tourSchema = Joi.object({
-	title: Joi.string().required(),
+	tour_name: Joi.string().required(),
+	country_id: Joi.number().integer().positive().required(),
+	city_id: Joi.number().integer().positive().required(),
+	service_id: Joi.number().integer().positive().required(),
+	itinerary: Joi.string().required(),
+	duration: Joi.string().required(),
+	departure_place: Joi.string().required(),
+	departure_date: Joi.string().required(),
 	description: Joi.string().required(),
-	destination: Joi.string().required(),
-	duration_days: Joi.number().integer().positive().required(),
 	max_participants: Joi.number().integer().positive().required(),
 	price_per_person: Joi.number().positive().required(),
-	included_services: Joi.array().items(Joi.string()),
-	excluded_services: Joi.array().items(Joi.string()),
 	status: Joi.string().valid('active', 'inactive').default('active'),
 });
 

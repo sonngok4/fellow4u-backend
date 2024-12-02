@@ -8,14 +8,6 @@ class TourImage {
         this.url = url;
     }
 
-    // static async create(id, tourId, url) {
-    //     const sql = 'INSERT INTO TourImages (id, tour_id, image_url) VALUES (?, ?, ?)';
-    //     try {
-    //         await database.executeQuery(sql, [id,tourId, url]);
-    //     } catch (error) {
-    //         throw error;
-    //     }
-    // }
 
     static async insert(image) {
         const sql = 'INSERT INTO TourImages (tour_id, image_url) VALUES (?, ?)';

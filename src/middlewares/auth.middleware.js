@@ -5,10 +5,12 @@ const User = require('../models/user.model');
 const Guide = require('../models/guide.model');
 const Agency = require('../models/agency.model');
 
+
 const authMiddleware = async (req, res, next) => {
 	try {
 		// Get token from header
 		const authorization = req.headers.authorization;
+		// console.log(authorization);
 		if (!authorization || !authorization.startsWith('Bearer ')) {
 			return res.status(401).json({
 				success: false,
@@ -18,10 +20,13 @@ const authMiddleware = async (req, res, next) => {
 
 		// Verify token
 		const token = authorization.split(' ')[1];
+		// console.log(token);
 		const decoded = await verifyToken(token);
+		console.log("DECODED: ",decoded);
+		
 
 		// Get user from database
-		const user = await User.findById(decoded.userId);
+		const user = await User.findById(decoded.id);
 		if (!user) {
 			return res.status(401).json({
 				success: false,
