@@ -7,6 +7,9 @@ const {
 	guideMiddleware,
 } = require('../middlewares/auth.middleware');
 const { validateTour } = require('../middlewares/validation.middleware');
+const Category = require('../models/category.model');
+const Country = require('../models/country.model');
+const City = require('../models/city.model');
 
 // Tour management routes (for guides)
 router.post(
@@ -31,6 +34,7 @@ router.delete(
 );
 
 router.post('/add', authMiddleware, tourController.createTour);
+router.get('/add', authMiddleware, tourController.getTourForm);
 
 
 // Public tour routes

@@ -15,6 +15,21 @@ const { cloudinary } = require('../configs/cloudinary');
 const City = require('../models/city.model');
 
 class TourController {
+
+	static async getTourForm(req, res, next) {
+		try {
+			const categories = await Category.findAll();
+			const countries = await Country.findAll();
+			const cities = await City.findAll();
+			res.json({
+				status: 'success',
+				data: { categories, countries, cities },
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
+	
 	static async createTour(req, res, next) {
 		try {
 			// Lấy token từ header
@@ -49,23 +64,6 @@ class TourController {
 				galleries,
 				schedules,
 			} = req.body;
-
-			console.log("tour_name:", tour_name);
-			console.log("category_id:", category_id);
-			console.log("country_id:", country_id);
-			console.log("city_id:", city_id);
-			console.log("service_id:", service_id);
-			console.log("itinerary:", itinerary);
-			console.log("duration:", duration);
-			console.log("departure_date:", departure_date);
-			console.log("departure_place:", departure_place);
-			console.log("cover_photo:", cover_photo);
-			console.log("description:", description);
-			console.log("price_adult:", price_adult);
-			console.log("price_child:", price_child);
-			console.log("price_baby:", price_baby);
-			console.log("schedules:", schedules);
-			console.log("galleries:", galleries);
 
 			schedules.forEach(schedule => {
 				if (!Array.isArray(schedule.activities) || schedule.activities.length === 0) {
@@ -279,7 +277,7 @@ class TourController {
 
 			res.status(201).json({
 				status: 'success',
-				data: { tour},
+				data: { tour },
 			});
 		} catch (error) {
 			next(error);

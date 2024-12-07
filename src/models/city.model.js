@@ -46,8 +46,8 @@ class City {
     static async findAll() {
         const sql = 'SELECT * FROM Cities';
         try {
-            const [rows] = await database.executeQuery(sql);
-            return rows;
+            const cites = await database.executeQuery(sql);
+            return cites;
         } catch (error) {
             throw error;
         }
